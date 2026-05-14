@@ -8,9 +8,10 @@ import AiBot from './components/AiBot';
 import HomePage from './pages/HomePage';
 import ProjectsPage from './pages/ProjectsPage';
 import AboutPage from './pages/AboutPage';
+import CertificationsPage from './pages/CertificationsPage';
 import PageTransition from './components/PageTransition';
 
-export type Page = 'home' | 'projects' | 'about';
+export type Page = 'home' | 'projects' | 'about' | 'certifications';
 
 export default function App() {
   const [currentPage, setCurrentPage] = useState<Page>('home');
@@ -59,6 +60,11 @@ export default function App() {
             {currentPage === 'about' && (
               <PageTransition key="about">
                 <AboutPage onNavigateHome={() => navigateTo('home')} />
+              </PageTransition>
+            )}
+            {currentPage === 'certifications' && (
+              <PageTransition key="certifications">
+                <CertificationsPage />
               </PageTransition>
             )}
           </AnimatePresence>

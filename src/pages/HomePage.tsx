@@ -1,4 +1,4 @@
-import { motion, useScroll, useTransform } from 'motion/react';
+import { motion, useScroll, useTransform, useSpring } from 'motion/react';
 import React, { useRef } from 'react';
 import {
   Code2,
@@ -25,8 +25,14 @@ export default function HomePage({ onNavigateToProjects, onNavigateToAbout }: Ho
     offset: ['start start', 'end end'],
   });
 
-  const heroOpacity = useTransform(scrollYProgress, [0, 0.12], [1, 0]);
-  const backgroundY = useTransform(scrollYProgress, [0, 1], ['0%', '50%']);
+  const smoothProgress = useSpring(scrollYProgress, {
+    stiffness: 100,
+    damping: 30,
+    restDelta: 0.001
+  });
+
+  const heroOpacity = useTransform(smoothProgress, [0, 0.12], [1, 0]);
+  const backgroundY = useTransform(smoothProgress, [0, 1], ['0%', '50%']);
   const featuredProjects = projects.filter((p) => p.featured);
 
   return (
@@ -146,6 +152,16 @@ export default function HomePage({ onNavigateToProjects, onNavigateToAbout }: Ho
               >
                 About Me
               </motion.button>
+              <motion.a
+                whileHover={{ scale: 1.03 }}
+                whileTap={{ scale: 0.97 }}
+                href="/Retuerma-Resume.pdf"
+                download="Hero_Jhoey_Retuerma_Resume.pdf"
+                className="flex items-center gap-2 px-8 py-4 bg-zinc-800 text-white rounded-full font-medium transition-all hover:bg-zinc-700 cursor-pointer"
+              >
+                <Smartphone className="w-4 h-4 hidden" /> {/* To load icon or use a generic one if needed */}
+                Download Resume
+              </motion.a>
               <motion.button
                 whileHover={{ scale: 1.03 }}
                 whileTap={{ scale: 0.97 }}

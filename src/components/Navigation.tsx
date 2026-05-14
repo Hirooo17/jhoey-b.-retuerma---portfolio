@@ -58,6 +58,9 @@ export default function Navigation({ currentPage, onNavigate }: NavigationProps)
           <NavLink active={currentPage === 'projects'} onClick={() => onNavigate('projects')}>
             Projects
           </NavLink>
+          <NavLink active={currentPage === 'certifications'} onClick={() => onNavigate('certifications')}>
+            Certifications
+          </NavLink>
           <NavLink active={false} onClick={() => handleNavClick('contact')}>
             Contact
           </NavLink>
