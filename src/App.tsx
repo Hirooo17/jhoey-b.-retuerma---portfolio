@@ -4,7 +4,6 @@ import Navigation from './components/Navigation';
 import ScrollProgress from './components/ScrollProgress';
 import CursorGlow from './components/CursorGlow';
 import Footer from './components/Footer';
-import AiBot from './components/AiBot';
 import HomePage from './pages/HomePage';
 import ProjectsPage from './pages/ProjectsPage';
 import AboutPage from './pages/AboutPage';
@@ -43,7 +42,6 @@ export default function App() {
         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.8 }}>
           <CursorGlow />
           <ScrollProgress />
-          <AiBot />
           <Navigation currentPage={currentPage} onNavigate={navigateTo} />
 
           <AnimatePresence mode="wait">

@@ -3,7 +3,9 @@ import React, { useRef } from 'react';
 import {
   Code2,
   Smartphone,
-  BrainCircuit,
+  ClipboardCheck,
+  Headphones,
+  Download,
   ArrowRight,
   ChevronDown,
   Github,
@@ -32,27 +34,13 @@ export default function HomePage({ onNavigateToProjects, onNavigateToAbout }: Ho
   });
 
   const heroOpacity = useTransform(smoothProgress, [0, 0.12], [1, 0]);
-  const backgroundY = useTransform(smoothProgress, [0, 1], ['0%', '50%']);
   const featuredProjects = projects.filter((p) => p.featured);
 
   return (
     <div ref={containerRef}>
       {/* ─── Hero Section ─── */}
       <section className="relative h-screen flex items-center justify-center overflow-hidden px-6">
-        {/* Animated background orbs */}
-        <motion.div style={{ y: backgroundY }} className="absolute inset-0 z-0">
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,_rgba(16,185,129,0.08)_0%,_transparent_50%)]" />
-          <motion.div
-            animate={{ scale: [1, 1.2, 1], opacity: [0.15, 0.25, 0.15] }}
-            transition={{ duration: 8, repeat: Infinity, ease: 'easeInOut' }}
-            className="absolute top-1/4 left-1/4 w-[500px] h-[500px] bg-emerald-900/20 rounded-full blur-[150px]"
-          />
-          <motion.div
-            animate={{ scale: [1.2, 1, 1.2], opacity: [0.1, 0.2, 0.1] }}
-            transition={{ duration: 10, repeat: Infinity, ease: 'easeInOut' }}
-            className="absolute bottom-1/4 right-1/4 w-[500px] h-[500px] bg-indigo-900/20 rounded-full blur-[150px]"
-          />
-        </motion.div>
+        <div className="absolute inset-0 z-0 bg-[linear-gradient(135deg,_#050505_0%,_#101014_52%,_#050505_100%)]" />
 
         {/* Grid pattern overlay */}
         <div
@@ -112,13 +100,12 @@ export default function HomePage({ onNavigateToProjects, onNavigateToAbout }: Ho
             >
               <div className="h-[1px] w-12 bg-zinc-700 hidden md:block" />
               <p className="text-xl md:text-2xl text-zinc-400 max-w-2xl font-light leading-relaxed">
-                A passionate developer from{' '}
-                <span className="text-white font-medium">Makati City</span>,{' '}
-                BSCS Graduate from{' '}
-                <span className="text-white font-medium">EARIST</span>.{' '}
+                Software Developer / QA intern and BSCS graduate from{' '}
+                <span className="text-white font-medium">EARIST</span>, based in{' '}
+                <span className="text-white font-medium">Makati City</span>.{' '}
                 <br className="hidden md:block" />
-                Crafting intelligent systems, seamless mobile experiences, and modern web
-                applications.
+                Building reliable web and mobile experiences with growing QA automation knowledge in
+                Playwright and Selenium.
               </p>
             </motion.div>
 
@@ -159,7 +146,7 @@ export default function HomePage({ onNavigateToProjects, onNavigateToAbout }: Ho
                 download="Hero_Jhoey_Retuerma_Resume.pdf"
                 className="flex items-center gap-2 px-8 py-4 bg-zinc-800 text-white rounded-full font-medium transition-all hover:bg-zinc-700 cursor-pointer"
               >
-                <Smartphone className="w-4 h-4 hidden" /> {/* To load icon or use a generic one if needed */}
+                <Download className="w-4 h-4" />
                 Download Resume
               </motion.a>
               <motion.button
@@ -193,9 +180,9 @@ export default function HomePage({ onNavigateToProjects, onNavigateToAbout }: Ho
         <div className="max-w-7xl mx-auto">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-12">
             <StatItem value="8+" label="Projects Completed" delay={0} />
-            <StatItem value="3" label="Areas of Expertise" delay={0.1} />
-            <StatItem value="2+" label="Years Learning" delay={0.2} />
-            <StatItem value="∞" label="Curiosity" delay={0.3} />
+            <StatItem value="5 mo" label="Internship Experience" delay={0.1} />
+            <StatItem value="QA" label="Playwright & Selenium" delay={0.2} />
+            <StatItem value="BSCS" label="EARIST Graduate" delay={0.3} />
           </div>
         </div>
       </section>
@@ -206,39 +193,49 @@ export default function HomePage({ onNavigateToProjects, onNavigateToAbout }: Ho
           <SectionHeader
             label="What I Do"
             title="Areas of Expertise"
-            description="Specialized in building end-to-end solutions across mobile, web, and machine learning domains."
+            description="Focused on software development, QA practices, automation fundamentals, and practical IT support."
           />
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <ExpertiseCard
-              icon={<Smartphone className="w-7 h-7" />}
-              iconColor="text-emerald-400"
-              bgColor="bg-emerald-500/10"
-              borderColor="group-hover:border-emerald-500/30"
-              title="Mobile Dev"
-              description="Building cross-platform Android applications with fluid animations and native-like performance."
-              tags={['Flutter', 'Expo Go', 'Android']}
-              delay={0.1}
-            />
-            <ExpertiseCard
-              icon={<BrainCircuit className="w-7 h-7" />}
-              iconColor="text-indigo-400"
-              bgColor="bg-indigo-500/10"
-              borderColor="group-hover:border-indigo-500/30"
-              title="Machine Learning"
-              description="Developing AI models and intelligent systems. Previous work includes creating synthetic voice detection models."
-              tags={['Python', 'Voice Detection', 'Data Science']}
-              delay={0.2}
-            />
+          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
             <ExpertiseCard
               icon={<Code2 className="w-7 h-7" />}
               iconColor="text-amber-400"
               bgColor="bg-amber-500/10"
               borderColor="group-hover:border-amber-500/30"
-              title="Web Development"
-              description="Crafting responsive, accessible, and highly interactive web interfaces with modern frontend tooling."
-              tags={['React', 'Tailwind CSS', 'TypeScript']}
+              title="Software Development"
+              description="Creating responsive web applications with clean interfaces, reusable components, and modern frontend tooling."
+              tags={['React', 'TypeScript', 'Tailwind CSS']}
+              delay={0.1}
+            />
+            <ExpertiseCard
+              icon={<ClipboardCheck className="w-7 h-7" />}
+              iconColor="text-cyan-400"
+              bgColor="bg-cyan-500/10"
+              borderColor="group-hover:border-cyan-500/30"
+              title="QA Automation"
+              description="Practicing test case design, bug reporting, regression checks, and browser automation with Playwright and Selenium."
+              tags={['Playwright', 'Selenium', 'Testing']}
+              delay={0.2}
+            />
+            <ExpertiseCard
+              icon={<Smartphone className="w-7 h-7" />}
+              iconColor="text-emerald-400"
+              bgColor="bg-emerald-500/10"
+              borderColor="group-hover:border-emerald-500/30"
+              title="Mobile & ML Projects"
+              description="Building cross-platform mobile apps and machine learning prototypes, including synthetic voice detection work."
+              tags={['Flutter', 'Python', 'TensorFlow']}
               delay={0.3}
+            />
+            <ExpertiseCard
+              icon={<Headphones className="w-7 h-7" />}
+              iconColor="text-indigo-400"
+              bgColor="bg-indigo-500/10"
+              borderColor="group-hover:border-indigo-500/30"
+              title="IT Service Desk"
+              description="Supporting users through troubleshooting, documentation, ticket handling, and clear technical communication."
+              tags={['Support', 'Tickets', 'Troubleshooting']}
+              delay={0.4}
             />
           </div>
         </div>
@@ -308,8 +305,8 @@ export default function HomePage({ onNavigateToProjects, onNavigateToAbout }: Ho
                   Let's build something great.
                 </h2>
                 <p className="text-zinc-400 text-lg mb-10 max-w-xl mx-auto leading-relaxed">
-                  Currently open for new opportunities. Whether you have a question or just want to
-                  say hi, I'll try my best to get back to you!
+                  Currently open for entry-level software development, QA, and IT support
+                  opportunities where I can contribute and keep growing.
                 </p>
               </motion.div>
 
