@@ -6,13 +6,13 @@ export default function CertificationsPage() {
     {
       id: 1,
       title: "Infosys Trainee at BGC IT Helpdesk and IT Intern",
-      date: "2024",
+      date: "2026",
       description: "Provided IT support and Helpdesk services as a trainee and intern at Infosys BGC."
     },
     {
       id: 2,
       title: "CompTIA A+ Certification",
-      date: "2023",
+      date: "2026",
       description: "Certified in fundamental IT skills including hardware, software, and troubleshooting."
     }
   ];
