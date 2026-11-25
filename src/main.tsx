@@ -4,6 +4,7 @@ import App from "./App.tsx";
 // @ts-ignore: allow importing CSS as a side effect in this entry file
 import "./index.css";
 import "./universe.css";
+import "./arrival-exhibition.css";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>

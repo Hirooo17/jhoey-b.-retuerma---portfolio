@@ -176,7 +176,7 @@ export const City = memo(function City({
     .map(([x, y, w, d, h, tone], i) => ({
       depth: x + y + w + d,
       node: (
-        <g key={"b" + i}>
+        <g key={"b" + i} className="plot-building" style={{animationDelay:(i%8)*65+"ms"}}>
           <Block {...{ x, y, w, d, h, tone }} />
           {i % 3 === 0 && (
             <g transform={`translate(0 -${h})`}>

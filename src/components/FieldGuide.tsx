@@ -1,10 +1,6 @@
 import { useState } from "react";
 import {
-  AudioLines,
   Braces,
-  BrainCircuit,
-  FlaskConical,
-  PanelsTopLeft,
   Smartphone,
   CheckCheck,
   ShieldCheck,
@@ -12,28 +8,6 @@ import {
   Repeat2,
   DraftingCompass,
 } from "lucide-react";
-const pipeline = [
-  [
-    "Capture",
-    "React interface",
-    "An uploaded audio clip is the input. The browser sends it to the Flask REST API for analysis.",
-  ],
-  [
-    "Process",
-    "Flask API",
-    "The service connects the uploaded recording to the detection pipeline. Spectrogram analysis represents how the signal changes over time.",
-  ],
-  [
-    "Classify",
-    "WavLM–AASIST",
-    "I trained a hybrid model to distinguish synthetic and human speech. The reported 90% accuracy applies to the training and test datasets.",
-  ],
-  [
-    "Return",
-    "Detection result",
-    "The interface presents the classification returned by the service. Its usefulness depends on how well evaluation data represents new recordings.",
-  ],
-];
 const workflow = [
   [
     "Understand",
@@ -124,45 +98,6 @@ export function Commission() {
           ))}
         </div>
         <p aria-live="polite">{lenses[lens][1]}</p>
-      </div>
-    </section>
-  );
-}
-export function CaseStudy() {
-  const [step, setStep] = useState(0);
-  const Icon = [AudioLines, FlaskConical, BrainCircuit, PanelsTopLeft][step];
-  return (
-    <section id="case-study" className="case-study dark">
-      <div className="wrap section">
-        <p className="eyebrow">Behind the build / EARIST capstone</p>
-        <h2>
-          From waveform <em>to verdict.</em>
-        </h2>
-        <div className="diagram">
-          <div className="diagram-flow">
-            {pipeline.map(([label], i) => (
-              <button
-                key={label}
-                aria-pressed={i === step}
-                onClick={() => setStep(i)}
-              >
-                <small>0{i + 1}</small>
-                {label}
-              </button>
-            ))}
-          </div>
-          <article key={step}>
-            <Icon size={54} strokeWidth={1.3} />
-            <div>
-              <h3>{pipeline[step][1]}</h3>
-              <p>{pipeline[step][2]}</p>
-            </div>
-          </article>
-        </div>
-        <p className="figure-note">
-          Interactive architecture diagram of the synthetic voice detector.
-          Select a stage to inspect it.
-        </p>
       </div>
     </section>
   );
