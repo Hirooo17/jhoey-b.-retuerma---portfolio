@@ -10,13 +10,20 @@ test("workbench, archive, toolbox, quick jump and contact", async ({
     if (msg.type() === "error") errors.push(msg.text());
   });
   await page.goto("/");
-  await page.getByRole("button", { name: "Test", exact: true }).focus();
+  await page.locator("#lab").scrollIntoViewIfNeeded();
+  await page.getByText("Open the miniature computer").click();
+  await page
+    .locator(".instrument")
+    .getByRole("button", { name: "Test", exact: true })
+    .focus();
   await page.keyboard.press("Space");
   await expect(
     page.getByRole("img", { name: /displaying TESTS PASSED/ }),
   ).toBeVisible();
-  await page.getByRole("group", { name: "Computer mode" })
-    .getByRole("button", { name: "Support", exact: true }).click();
+  await page
+    .getByRole("group", { name: "Computer mode" })
+    .getByRole("button", { name: "Support", exact: true })
+    .click();
   await expect(
     page.getByText("Signal online", { exact: true }).last(),
   ).toBeVisible();
@@ -30,6 +37,7 @@ test("workbench, archive, toolbox, quick jump and contact", async ({
     ).toHaveAttribute("href", /^https:\/\/github.com\/Hirooo17\/.+/);
     await page.getByRole("button", { name: "Next project" }).click();
   }
+  await page.locator("#toolbox").scrollIntoViewIfNeeded();
   await page.getByRole("button", { name: "Mobile", exact: true }).click();
   await expect(page.locator(".tools")).toContainText("Flutter");
   await page.getByRole("button", { name: "Reset to Web" }).click();
@@ -69,11 +77,17 @@ for (const width of [375, 768, 1024, 1440, 1920]) {
         () => document.documentElement.scrollWidth <= innerWidth,
       ),
     ).toBe(true);
-    await expect(page.locator(".model")).toHaveCSS("transform", "none");
+    await expect(page.locator(".camera")).toHaveCSS(
+      "transition-duration",
+      "0s",
+    );
     await page.screenshot({ path: "review/" + width + ".png" });
     if (width === 375) {
       await page.getByRole("button", { name: "Menu" }).click();
-      await page.getByRole("navigation").getByText("Experience").click();
+      await page
+        .getByRole("navigation")
+        .getByText("Experience", { exact: true })
+        .click();
       await expect(page).toHaveURL(/#experience$/);
       await expect(page.getByRole("button", { name: "Menu" })).toHaveAttribute(
         "aria-expanded",

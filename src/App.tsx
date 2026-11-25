@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { lazy, useEffect, useRef, useState } from "react";
 import {
   ArrowDown,
   ArrowDownToLine,
@@ -8,18 +8,33 @@ import {
   Menu,
   X,
 } from "lucide-react";
-import Workbench from "./components/Workbench";
+const Workbench = lazy(() => import("./components/Workbench"));
 import Work from "./components/Work";
-import Profile from "./components/Profile";
+import { Archive, About, Credentials } from "./components/Profile";
+import Atlas from "./components/Atlas";
+import Passport from "./components/Passport";
+import Nearby from "./components/Nearby";
+import { CaseStudy, Workflow, Commission } from "./components/FieldGuide";
+import { toolbox } from "./data/portfolio";
+
+const StickerTray = lazy(() => import("./components/StickerTray"));
+const Lab = lazy(() => import("./components/Lab"));
 import { profile } from "./data/portfolio";
 
-const links = [
-  ["work", "Work"],
+const chapters = [
+  ["home", "Career atlas"],
   ["experience", "Experience"],
-  ["about", "About"],
+  ["commission", "Commission"],
+  ["work", "Work"],
+  ["case-study", "Case study"],
+  ["workflow", "Workflow"],
   ["toolbox", "Toolbox"],
+  ["lab", "The Lab"],
+  ["about", "About"],
   ["certifications", "Credentials"],
+  ["contact", "Contact"],
 ];
+const links = [chapters[0], chapters[1], chapters[3], chapters[7]];
 
 function Mark() {
   return (
@@ -82,10 +97,11 @@ function Navigation() {
           className="wordmark"
           href="#home"
           onClick={() => setOpen(false)}
-          aria-label="HJBR home"
+          aria-label="hjbr. Field Atlas home"
         >
           <Mark />
           hjbr<span>.</span>
+          <small>FIELD ATLAS</small>
         </a>
         <button
           className="menu-toggle"
@@ -97,7 +113,7 @@ function Navigation() {
           {open ? <X size={20} /> : <Menu size={20} />} Menu
         </button>
         <nav id="main-nav" aria-label="Primary" className={open ? "open" : ""}>
-          {links.map(([id, label]) => (
+          {(open ? chapters : links).map(([id, label]) => (
             <a
               href={"#" + id}
               key={id}
@@ -108,6 +124,25 @@ function Navigation() {
             </a>
           ))}
         </nav>
+        <label className="journey-select">
+          <span className="mono">
+            {String(
+              Math.max(1, chapters.findIndex(([id]) => id === active) + 1),
+            ).padStart(2, "0")}{" "}
+            / 11
+          </span>
+          <select
+            aria-label="Jump to chapter"
+            value={active || "home"}
+            onChange={(e) => (location.hash = e.target.value)}
+          >
+            {chapters.map(([id, name]) => (
+              <option key={id} value={id}>
+                {name}
+              </option>
+            ))}
+          </select>
+        </label>
         <a
           className="contact-pill"
           href="#contact"
@@ -115,6 +150,20 @@ function Navigation() {
         >
           Let’s talk <ArrowUpRight size={16} />
         </a>
+      </div>
+      <div
+        className="journey-meter"
+        title={chapters.find(([id]) => id === active)?.[1]}
+      >
+        <i
+          style={{
+            width:
+              ((chapters.findIndex(([id]) => id === active) + 1) /
+                chapters.length) *
+                100 +
+              "%",
+          }}
+        />
       </div>
     </header>
   );
@@ -146,7 +195,7 @@ function Contact() {
   return (
     <footer id="contact">
       <div className="wrap section">
-        <p className="eyebrow">06 / Contact</p>
+        <p className="eyebrow">Final stop / Contact</p>
         <h2>
           Let’s build something
           <br />
@@ -199,6 +248,10 @@ function Contact() {
           </button>
           <a href="#home">Back to top ↑</a>
         </div>
+        <Passport />
+        <a className="return-map" href="#atlas">
+          ↖ Return to the career atlas
+        </a>
         <div className="folio">
           <span>Hero Jhoey B. Retuerma</span>
           <span>Makati City, Philippines</span>
@@ -214,7 +267,7 @@ function Contact() {
             <X />
           </button>
         </div>
-        {links.map(([id, label]) => (
+        {chapters.map(([id, label]) => (
           <a key={id} href={"#" + id} onClick={() => dialog.current?.close()}>
             {label}
             <ArrowUpRight size={16} />
@@ -226,6 +279,10 @@ function Contact() {
 }
 
 export default function App() {
+  useEffect(() => {
+    const target = document.getElementById(location.hash.slice(1));
+    if (target) target.scrollIntoView({ behavior: "instant" });
+  }, []);
   return (
     <>
       <a href="#main" className="skip">
@@ -238,18 +295,18 @@ export default function App() {
             <div className="hero-copy">
               <p className="eyebrow main-label">
                 <span />
-                The playful engineer
+                An interactive career universe
               </p>
               <h1>
-                <span>I build. I test.</span>
+                <span>My career,</span>
                 <span>
-                  I make it <em>work.</em>
+                  <em>mapped.</em>
                 </span>
               </h1>
               <p className="intro">
                 I’m <strong>{profile.name}</strong>, a software developer in
-                Makati City working across quality assurance and backend
-                support.
+                Makati City. Explore the places behind my work in Flutter
+                development, quality assurance and backend support.
               </p>
               <div className="hero-actions">
                 <a
@@ -277,7 +334,7 @@ export default function App() {
                 <i className="led" /> L1 Backend Support at PLDT
               </p>
             </div>
-            <Workbench />
+            <Atlas />
           </div>
           <div className="hero-foot">
             <span>
@@ -287,12 +344,60 @@ export default function App() {
               <MapPin size={14} /> Makati City, PH
             </span>
             <a href="#work">
-              Scroll to explore <ArrowDown size={14} />
+              Enter the exhibition <ArrowDown size={14} />
             </a>
           </div>
         </section>
+        <Archive />
+        <Commission />
         <Work />
-        <Profile />
+        <CaseStudy />
+        <Workflow />
+        <section id="toolbox" className="tool-section">
+          <div className="section wrap">
+            <p className="eyebrow">Hands-on collection</p>
+            <h2>
+              The tool <em>tray.</em>
+            </h2>
+            <Nearby
+              fallback={
+                <details>
+                  <summary>Browse all technologies</summary>
+                  {Object.entries(toolbox).map(([k, v]) => (
+                    <p key={k}>
+                      <strong>{k}</strong> · {v.join(", ")}
+                    </p>
+                  ))}
+                </details>
+              }
+            >
+              <StickerTray />
+            </Nearby>
+          </div>
+        </section>
+        <section id="lab" className="wrap section laboratory">
+          <p className="eyebrow">Experiments / Open bench</p>
+          <h2>
+            The <em>Lab.</em>
+          </h2>
+          <Nearby
+            fallback={
+              <p>
+                Line engraving, local command console and miniature computer.
+              </p>
+            }
+          >
+            <Lab />
+            <details className="computer-drawer">
+              <summary>
+                Open the miniature computer <span>＋</span>
+              </summary>
+              <Workbench />
+            </details>
+          </Nearby>
+        </section>
+        <About />
+        <Credentials />
       </main>
       <Contact />
     </>
