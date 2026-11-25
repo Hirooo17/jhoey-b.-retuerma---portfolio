@@ -1,20 +1,20 @@
-<div align="center">
-<img width="1200" height="475" alt="GHBanner" src="https://github.com/user-attachments/assets/0aa67016-6eaf-458a-adb2-6e31a0763ed6" />
-</div>
+# The Playful Engineer
 
-# Run and deploy your AI Studio app
+Hero Jhoey B. Retuerma’s React, TypeScript and Vite portfolio. The illustrated desktop computer switches between Build, Test and Support. Press **?** to open the section picker.
 
-This contains everything you need to run your app locally.
+## Local development
 
-View your app in AI Studio: https://ai.studio/apps/f0c560bb-84c6-4435-adbf-1bb9d91a5755
+With Node.js 22.12+ or a supported newer release, run `npm ci` and `npm run dev`. Vite prints the local URL. The portfolio runs entirely in the browser and uses locally bundled fonts.
 
-## Run Locally
+## Production and checks
 
-**Prerequisites:**  Node.js
+- `npm run lint` runs the TypeScript checker.
+- `npm run build` generates the static Vercel-compatible site in `dist/`.
+- `npm run preview` serves the production build locally.
+- After building, run `npx playwright install chromium` once and then `npm test`. To use an installed Chrome instead, set `PLAYWRIGHT_CHANNEL=chrome`. Tests capture responsive screenshots in `review/`.
 
+## Editing
 
-1. Install dependencies:
-   `npm install`
-2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
-3. Run the app:
-   `npm run dev`
+Professional experience, projects, repository links, social links and technologies live in `src/data/portfolio.ts`. The credential index is in `src/components/Profile.tsx`. Update the published résumé by replacing `public/Retuerma-Resume.pdf`.
+
+The contact composer prepares a draft in the visitor’s email app. Project covers are illustrations. Credential verification URLs and a working CleanComm demo URL can be added when available.
