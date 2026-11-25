@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useImperativeHandle, type Ref, useCallback, useEffect, useRef, useState } from "react";
 import {
   Plus,
   Minus,
@@ -13,7 +13,8 @@ import { recordStop } from "./Passport";
 import { experience } from "../data/portfolio";
 
 const center = { x: 400, y: 190, z: 1 };
-export default function Atlas() {
+export type AtlasHandle={startTour:()=>void};
+export default function Atlas({ref}:{ref?:Ref<AtlasHandle>}) {
   const [camera, setCamera] = useState(center);
   const [selection, setSelection] = useState<number | null>(null);
   const [dragging, setDragging] = useState(false);
@@ -56,6 +57,7 @@ export default function Atlas() {
       setTour(false);
     }, 2200);
   }
+  useImperativeHandle(ref,()=>({startTour(){follow();frame.current?.scrollIntoView({block:"nearest"});}}));
   useEffect(() => {
     const io = new IntersectionObserver(([entry]) =>
       setVisible(entry.isIntersecting),
