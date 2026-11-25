@@ -39,7 +39,7 @@ export const projects = [
     description:
       "A playful way for families to keep schedules, tasks and daily routines together.",
     notes:
-      "I developed a Flutter app for Android, iOS and web. Family activities can be added, edited, retrieved and removed, with Firebase keeping the records available between sessions.",
+      "I developed a Flutter app for Android, iOS and web. Family activities can be added, edited, retrieved and removed, with Firebase keeping the records available between sessions. The project includes mission screens, an activity history and a profile editor.",
     tags: ["Flutter", "Dart", "Firebase"],
     repo: "app-go-parent",
   },
@@ -50,7 +50,7 @@ export const projects = [
     art: "dental",
     description: "A desktop management application for a dental clinic.",
     notes:
-      "This project explores how clinic management can be organized in a Visual Basic .NET desktop application. The public repository contains the implementation.",
+      "The Visual Basic .NET project separates appointment viewing, reservations, patient profiles and patient history into desktop forms. An appointment viewer and a patient history view give the clinic different ways to look up a visit.",
     tags: ["Visual Basic", ".NET"],
     repo: "DentalManageMentSystemPLSPLSPLS",
   },

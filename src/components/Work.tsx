@@ -1,8 +1,31 @@
 import { useState } from "react";
 import { ArrowUpRight, ChevronLeft, ChevronRight, Plus } from "lucide-react";
+import { collect } from "./Passport";
 import { profile, projects } from "../data/portfolio";
 
-function Cover({ art }: { art: string }) {
+const studies: Record<string, [string[], string]> = {
+  audio: [
+    ["Audio upload", "Flask API", "Hybrid model"],
+    "How well does a model trained on one set of voices generalize to unfamiliar recordings?",
+  ],
+  map: [
+    ["Resident report", "Role-based access", "Admin updates"],
+    "Can a resident follow an issue while administrative actions stay restricted to the right role?",
+  ],
+  steps: [
+    ["Family routine", "Flutter interface", "Firebase storage"],
+    "Does a task survive reopening the app, and can a parent edit it from another device?",
+  ],
+  dental: [
+    ["Clinic tasks", "Visual Basic UI", ".NET desktop app"],
+    "Which actions should a clinic user be able to reach in a single step?",
+  ],
+  type: [
+    ["Career data", "React exhibits", "Static deployment"],
+    "Can every exhibit still be explored with a keyboard and reduced motion?",
+  ],
+};
+function Cover({ art, dial }: { art: string; dial: number }) {
   return (
     <svg
       className={"cover " + art}
@@ -38,7 +61,7 @@ function Cover({ art }: { art: string }) {
                 (
                   64 +
                   i * 4.1 +
-                  Math.sin(x / 32 + i * 0.15) *
+                  Math.sin(x / 32 + i * 0.15 + dial / 16) *
                     a *
                     (56 + 12 * Math.cos(i * 0.17))
                 ).toFixed(1)
@@ -50,7 +73,7 @@ function Cover({ art }: { art: string }) {
       )}
       {art === "map" && (
         <g
-          transform="translate(296 126) rotate(-28)"
+          transform={`translate(296 126) rotate(${-28 + dial / 2})`}
           stroke="currentColor"
           fill="none"
         >
@@ -74,7 +97,7 @@ function Cover({ art }: { art: string }) {
             <path
               key={i}
               d={`M${35 + i * 12} 260v-45h65v-58h65V99h65V41h65v-62`}
-              transform={`translate(${i * 17} 0)`}
+              transform={`translate(${i * (15 + dial / 10)} 0)`}
             />
           ))}
         </g>
@@ -84,7 +107,7 @@ function Cover({ art }: { art: string }) {
           {Array.from({ length: 18 }, (_, i) => (
             <path
               key={i}
-              transform={`translate(${175 + i * 4} ${40 + i * 2}) scale(.9)`}
+              transform={`translate(${175 + i * (4 + dial / 40)} ${40 + i * 2}) scale(.9)`}
               d="M77 30C2-14-10 65 20 111c12 19 12 77 35 76 17-2 11-69 34-65s13 73 37 64c17-7 16-54 28-79C193 40 169-8 108 18L77 30Z"
             />
           ))}
@@ -98,7 +121,7 @@ function Cover({ art }: { art: string }) {
           fill="currentColor"
           fontFamily="Georgia,serif"
           fontStyle="italic"
-          fontSize="188"
+          fontSize={175 + dial}
           letterSpacing="-17"
         >
           HJBR.
@@ -111,26 +134,30 @@ function Cover({ art }: { art: string }) {
 export default function Work() {
   const [index, setIndex] = useState(0);
   const item = projects[index];
+  const [dial, setDial] = useState(0);
   return (
     <section className="section wrap" id="work">
-      <p className="eyebrow">01 / Project archive</p>
+      <p className="eyebrow">The project exhibition</p>
       <div className="section-title">
         <h2>
-          Selected <em>work.</em>
+          Exhibition <em>hall.</em>
         </h2>
         <div className="pager">
           <button
             aria-label="Previous project"
-              onClick={() => setIndex((index + projects.length - 1) % projects.length)}
+            onClick={() =>
+              setIndex((index + projects.length - 1) % projects.length)
+            }
           >
             <ChevronLeft />
           </button>
           <span className="mono" aria-live="polite">
-              {String(index + 1).padStart(2, "0")} / {String(projects.length).padStart(2, "0")}
+            {String(index + 1).padStart(2, "0")} /{" "}
+            {String(projects.length).padStart(2, "0")}
           </span>
           <button
             aria-label="Next project"
-              onClick={() => setIndex((index + 1) % projects.length)}
+            onClick={() => setIndex((index + 1) % projects.length)}
           >
             <ChevronRight />
           </button>
@@ -151,7 +178,27 @@ export default function Work() {
           ))}
         </div>
         <article key={item.art} className="project">
-          <Cover art={item.art} />
+          <figure className="exhibit-mount">
+            <div className="mount-label">
+              <span>HJBR COLLECTION</span>
+              <span>EXHIBIT 0{index + 1}</span>
+            </div>
+            <Cover art={item.art} dial={dial} />
+            <figcaption>
+              <label>
+                Art study{" "}
+                <input
+                  aria-label="Adjust exhibit artwork"
+                  type="range"
+                  min="0"
+                  max="60"
+                  value={dial}
+                  onChange={(e) => setDial(+e.target.value)}
+                />
+              </label>
+              <small>Interactive illustration</small>
+            </figcaption>
+          </figure>
           <div className="project-body">
             <p className="eyebrow">
               {item.category} / {item.year}
@@ -163,16 +210,34 @@ export default function Work() {
                 <span key={t}>{t}</span>
               ))}
             </div>
-            <details>
+            <details
+              onToggle={(e) => {
+                if (e.currentTarget.open) collect("project");
+              }}
+            >
               <summary>
                 Project notes <Plus size={17} />
               </summary>
               <p>{item.notes}</p>
+              <div className="project-chain">
+                {studies[item.art][0].map((label) => (
+                  <span key={label}>{label}</span>
+                ))}
+              </div>
+              <p>
+                <b>Design question</b>
+                <br />
+                {studies[item.art][1]}
+              </p>
             </details>
             <a className="textlink" href={profile.github + "/" + item.repo}>
               View repository <ArrowUpRight size={15} />
             </a>
-            {item.demo && <a className="textlink" href={item.demo}>Published portfolio <ArrowUpRight size={15}/></a>}
+            {item.demo && (
+              <a className="textlink" href={item.demo}>
+                Published portfolio <ArrowUpRight size={15} />
+              </a>
+            )}
           </div>
         </article>
       </div>
