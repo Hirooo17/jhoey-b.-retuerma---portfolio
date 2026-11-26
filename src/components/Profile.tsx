@@ -1,6 +1,11 @@
-import { Plus, Music2, Gamepad2, Coffee } from "lucide-react";
+import { Plus, Music2, Gamepad2, Coffee, Cpu, Headset } from "lucide-react";
 import { useState } from "react";
 import { experience } from "../data/portfolio";
+const deskObjects = [
+  { label: "Music", Icon: Music2, note: "A good playlist keeps me company while I code." },
+  { label: "Games", Icon: Gamepad2, note: "After a long coding session, I unwind with a game." },
+  { label: "Coffee", Icon: Coffee, note: "Coffee earns a spot on my desk." },
+];
 export function Archive() {
   return (
     <section id="experience" className="dark">
@@ -67,26 +72,18 @@ export function About() {
         <div className="desk-shelf">
           <span className="eyebrow">Off the keyboard</span>
           <div>
-            {[Music2, Gamepad2, Coffee].map((Icon, i) => (
+            {deskObjects.map(({ Icon, label }, i) => (
               <button
-                key={i}
+                key={label}
                 aria-pressed={pick === i}
-                aria-label={["Music", "Games", "Coffee"][i]}
+                aria-label={label}
                 onClick={() => setPick(i)}
               >
                 <Icon />
               </button>
             ))}
           </div>
-          <p>
-            {
-              [
-                "Music keeps me company through a build session.",
-                "Games are another way I explore systems and strategy.",
-                "Coffee is a familiar part of a long build session.",
-              ][pick]
-            }
-          </p>
+          <p aria-live="polite">{deskObjects[pick].note}</p>
         </div>
         <details>
           <summary>
@@ -113,6 +110,7 @@ export function Credentials() {
       <div className="credential-shelf">
         <details>
           <summary>
+            <i className="credential-seal" aria-hidden="true"><Cpu /></i>
             <span>
               CompTIA A+ <small>Certification · 2026</small>
             </span>
@@ -125,6 +123,7 @@ export function Credentials() {
         </details>
         <details>
           <summary>
+            <i className="credential-seal" aria-hidden="true"><Headset /></i>
             <span>
               Infosys BGC IT Helpdesk{" "}
               <small>Trainee & IT internship · 2026</small>

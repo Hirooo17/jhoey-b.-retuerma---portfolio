@@ -763,10 +763,40 @@ input[type="range"] {
   padding: 17px;
   align-self: start;
 }
-.credential-shelf summary:before {
-  content: "✺";
-  font-size: 2.5rem;
-  color: #9e6d49;
+.credential-seal {
+  display: grid;
+  place-items: center;
+  width: 3rem;
+  height: 3rem;
+  flex: none;
+  border: 3px double currentColor;
+  border-radius: 50%;
+  color: #72513d;
+  background: #ede3d5;
+}
+.credential-shelf details[open] .credential-seal {
+  color: #f7f2e9;
+  background: #72513d;
+}
+.credential-shelf summary .credential-seal svg {
+  margin: 0;
+  transform: none;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .desk-shelf button {
+    transition: transform .35s cubic-bezier(.2, 1.7, .4, 1), background-color .18s;
+  }
+  .desk-shelf button[aria-pressed="true"] {
+    transform: translateY(-4px) rotate(5deg);
+  }
+  .credential-shelf details[open] .credential-seal {
+    animation: press-seal .38s var(--ease);
+  }
+  @keyframes press-seal {
+    0% { transform: translateY(-4px) rotate(-10deg); }
+    50% { transform: scale(.86) rotate(3deg); }
+    76% { transform: scale(1.05); }
+  }
 }
 .credential-shelf summary {
   justify-content: start;

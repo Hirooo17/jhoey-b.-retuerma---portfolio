@@ -22,6 +22,7 @@ import {
 } from "lucide-react";
 import { exhibits, studies } from "../data/exhibition";
 import { profile } from "../data/portfolio";
+import { collect } from "./Passport";
 const symbols: Record<string, LucideIcon[]> = {
   audio: [AudioLines, Server, BrainCircuit, Monitor],
   map: [ClipboardList, Users, ListChecks],
@@ -70,7 +71,10 @@ function Notebook({ index }: { index: number }) {
               <button
                 key={name}
                 aria-pressed={step === i}
-                onClick={() => setStep(i)}
+                onClick={() => {
+                  setStep(i);
+                  collect("project");
+                }}
               >
                 <span className="node-icon">
                   <Symbol size={20} aria-hidden="true" />
@@ -146,7 +150,10 @@ export default function StudyRoom({
             <select
               aria-label="Open a case study"
               value={index}
-              onChange={(e) => onSelect(+e.target.value)}
+              onChange={(e) => {
+                onSelect(+e.target.value);
+                collect("project");
+              }}
             >
               {exhibits.map((item, i) => (
                 <option key={item.art} value={i}>

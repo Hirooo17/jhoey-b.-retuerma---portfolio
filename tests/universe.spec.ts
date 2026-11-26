@@ -38,6 +38,9 @@ test("explore the career atlas, camera, route and field guide", async ({
     .getByRole("button", { name: /Classify/ })
     .click();
   await expect(page.locator(".diagram article")).toContainText("90%");
+  await expect(page.locator(".passport li.earned")).toContainText([
+    "Both city stops", "Exhibition notes",
+  ]);
   await page
     .locator("#workflow")
     .getByRole("button", { name: "Test", exact: true })
@@ -65,6 +68,10 @@ test("throw a tool, operate both lab exhibits and reset saved stamps", async ({
   expect(await key.getAttribute("style")).not.toBe(old);
   await expect(page.locator(".key-info")).toContainText("React");
   await page.getByRole("button", { name: "Resume gravity" }).click();
+  await page.getByRole("button", { name: "Quality", exact: true }).click();
+  await tray.getByRole("button", { name: /Regression testing/ }).focus();
+  await page.keyboard.press("Enter");
+  await expect(page.locator(".key-info")).toContainText("Rechecks existing behavior");
   await page.locator("#lab").scrollIntoViewIfNeeded();
   const art = page.locator(".press-box polyline").first(),
     prev = await art.getAttribute("points");
