@@ -1,14 +1,10 @@
 import { lazy, useEffect, useRef, useState } from "react";
-import {
-  ArrowUpRight,
-  Command,
-  Menu,
-  X,
-} from "lucide-react";
+import { ArrowUpRight, Command, Menu, X } from "lucide-react";
 const Workbench = lazy(() => import("./components/Workbench"));
 import Work from "./components/Work";
 import { Archive, About, Credentials } from "./components/Profile";
 import Arrival from "./components/Arrival";
+import { notebookFromUrl, notebookUrl } from "./data/exhibition";
 import StudyRoom from "./components/StudyRoom";
 import Passport from "./components/Passport";
 import Nearby from "./components/Nearby";
@@ -58,8 +54,25 @@ function Mark() {
 function Navigation() {
   const [open, setOpen] = useState(false);
   const [active, setActive] = useState("");
-  const progress=useRef<HTMLDivElement>(null);
-  const index=Math.max(0,chapters.findIndex(([id])=>id===active));
+  const progress = useRef<HTMLDivElement>(null);
+  const destination = useRef<string | null>(null);
+  const settle = useRef<ReturnType<typeof setTimeout>>(undefined);
+  function chooseChapter(id: string) {
+    destination.current = id;
+    setActive(id);
+    setOpen(false);
+    if (location.hash === "#" + id)
+      document.getElementById(id)?.scrollIntoView();
+    else location.hash = id;
+    clearTimeout(settle.current);
+    settle.current = setTimeout(() => {
+      destination.current = null;
+    }, 250);
+  }
+  const index = Math.max(
+    0,
+    chapters.findIndex(([id]) => id === active),
+  );
   const menu = useRef<HTMLButtonElement>(null);
   useEffect(() => {
     const sections = Array.from(
@@ -68,23 +81,73 @@ function Navigation() {
     let frame = 0;
     const update = () => {
       frame = 0;
-      const top=window.scrollY, extent=document.documentElement.scrollHeight-innerHeight;
-      progress.current?.style.setProperty('--read',String(extent>0?Math.max(0,Math.min(1,top/extent)):0));
-      setActive(top>0&&top>=extent-2?'contact':sections.filter(s=>s.getBoundingClientRect().top<=Math.max(150,document.querySelector('header')!.offsetHeight+10)).at(-1)?.id || 'home');
+      const top = window.scrollY,
+        extent = document.documentElement.scrollHeight - innerHeight;
+      progress.current?.style.setProperty(
+        "--read",
+        String(extent > 0 ? Math.max(0, Math.min(1, top / extent)) : 0),
+      );
+      if (destination.current) return;
+      const readingEdge = Math.max(
+        150,
+        (progress.current?.closest("header")?.offsetHeight || 0) + 10,
+      );
+      setActive(
+        top > 0 && top >= extent - 2
+          ? "contact"
+          : sections
+              .filter((s) => s.getBoundingClientRect().top <= readingEdge)
+              .at(-1)?.id || "home",
+      );
     };
     const onScroll = () => {
+      if (destination.current) {
+        clearTimeout(settle.current);
+        settle.current = setTimeout(() => {
+          destination.current = null;
+          update();
+        }, 180);
+      }
       if (!frame) frame = requestAnimationFrame(update);
     };
-    const ro=new ResizeObserver(onScroll);ro.observe(document.body);
+    const release = () => {
+      destination.current = null;
+      clearTimeout(settle.current);
+    };
+    const ro = new ResizeObserver(onScroll);
+    ro.observe(document.body);
     update();
     window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("wheel", release, { passive: true });
+    window.addEventListener("touchstart", release, { passive: true });
     return () => {
+      release();
+      window.removeEventListener("wheel", release);
+      window.removeEventListener("touchstart", release);
       window.removeEventListener("scroll", onScroll);
-      ro.disconnect();cancelAnimationFrame(frame);
+      ro.disconnect();
+      cancelAnimationFrame(frame);
     };
   }, []);
   return (
     <header
+      onClick={(e) => {
+        if (
+          e.defaultPrevented ||
+          e.ctrlKey ||
+          e.metaKey ||
+          e.shiftKey ||
+          e.altKey
+        )
+          return;
+        const link = (e.target as Element).closest<HTMLAnchorElement>(
+          'a[href^="#"]',
+        );
+        if (!link) return;
+        e.preventDefault();
+        if (link.getAttribute("aria-disabled") !== "true")
+          chooseChapter(link.hash.slice(1));
+      }}
       onKeyDown={(e) => {
         if (e.key === "Escape" && open) {
           setOpen(false);
@@ -133,12 +196,62 @@ function Navigation() {
           Let’s talk <ArrowUpRight size={16} />
         </a>
       </div>
-      <div className="route-console"><div className="wrap route-inner">
-        <span className="station-count" key={index}>{String(index+1).padStart(2,'0')} <small>/ {chapters.length}</small></span>
-        <select aria-label="Jump to chapter" value={chapters[index][0]} onChange={e=>location.hash=e.target.value}>{chapters.map(([id,label])=><option key={id} value={id}>{label}</option>)}</select>
-        <div className="station-rail" aria-label="Journey overview">{chapters.map(([id,label],i)=><a key={id} href={'#'+id} data-label={label} aria-label={'Chapter '+(i+1)+': '+label} aria-current={index===i?'step':undefined} className={i<index?'passed':''}><i/></a>)}</div>
-        <div className="step-links"><a href={'#'+chapters[Math.max(0,index-1)][0]} aria-label="Previous chapter" aria-disabled={index===0} tabIndex={index===0?-1:0}>←</a><a href={'#'+chapters[(index+1)%chapters.length][0]} aria-label={index===chapters.length-1?'Return to first chapter':'Next chapter'}>{index===chapters.length-1?'↑':'→'}</a></div>
-      </div><div className="reading-line" ref={progress}><i/></div></div>
+      <div className="route-console">
+        <div className="wrap route-inner">
+          <span className="station-count" key={index}>
+            {String(index + 1).padStart(2, "0")}{" "}
+            <small>/ {chapters.length}</small>
+          </span>
+          <select
+            aria-label="Jump to chapter"
+            value={chapters[index][0]}
+            onChange={(e) => chooseChapter(e.target.value)}
+          >
+            {chapters.map(([id, label]) => (
+              <option key={id} value={id}>
+                {label}
+              </option>
+            ))}
+          </select>
+          <div className="station-rail" aria-label="Journey overview">
+            {chapters.map(([id, label], i) => (
+              <a
+                key={id}
+                href={"#" + id}
+                data-label={label}
+                aria-label={"Chapter " + (i + 1) + ": " + label}
+                aria-current={index === i ? "step" : undefined}
+                className={i < index ? "passed" : ""}
+              >
+                <i />
+              </a>
+            ))}
+          </div>
+          <div className="step-links">
+            <a
+              href={"#" + chapters[Math.max(0, index - 1)][0]}
+              aria-label="Previous chapter"
+              aria-disabled={index === 0}
+              tabIndex={index === 0 ? -1 : 0}
+            >
+              ←
+            </a>
+            <a
+              href={"#" + chapters[(index + 1) % chapters.length][0]}
+              aria-label={
+                index === chapters.length - 1
+                  ? "Return to first chapter"
+                  : "Next chapter"
+              }
+            >
+              {index === chapters.length - 1 ? "↑" : "→"}
+            </a>
+          </div>
+        </div>
+        <div className="reading-line" ref={progress}>
+          <i />
+        </div>
+      </div>
     </header>
   );
 }
@@ -253,10 +366,21 @@ function Contact() {
 }
 
 export default function App() {
-  const [study,setStudy]=useState(0);
+  const [study, setStudy] = useState(notebookFromUrl);
+  function openNotebook(index: number) {
+    const url = notebookUrl(index);
+    if (location.href !== url.href) history.pushState(null, "", url);
+    setStudy(index);
+    const section = document.getElementById("case-study");
+    section?.scrollIntoView();
+    section?.focus({ preventScroll: true });
+  }
   useEffect(() => {
     const target = document.getElementById(location.hash.slice(1));
     if (target) target.scrollIntoView({ behavior: "instant" });
+    const restore = () => setStudy(notebookFromUrl());
+    window.addEventListener("popstate", restore);
+    return () => window.removeEventListener("popstate", restore);
   }, []);
   return (
     <>
@@ -265,11 +389,17 @@ export default function App() {
       </a>
       <Navigation />
       <main id="main">
-        <Arrival/>
+        <Arrival />
         <Archive />
         <Commission />
-        <Work onStudy={setStudy}/>
-        <StudyRoom index={study} onSelect={setStudy}/>
+        <Work onStudy={openNotebook} />
+        <StudyRoom
+          index={study}
+          onSelect={(i) => {
+            history.replaceState(null, "", notebookUrl(i));
+            setStudy(i);
+          }}
+        />
         <Workflow />
         <section id="toolbox" className="tool-section">
           <div className="section wrap">
