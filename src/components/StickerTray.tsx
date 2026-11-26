@@ -16,13 +16,27 @@ const prompts: Record<string, string> = {
   Playwright:
     "Drives the browser tests for this portfolio, including touch and keyboard checks.",
   Selenium: "A browser automation tool in my QA toolkit.",
-};
-const context: Record<string, string> = {
-  Web: "Web application development",
-  Mobile: "Cross-platform application development",
-  Data: "Data and machine learning",
-  Quality: "Quality assurance and verification",
-  Support: "Technical support and service operations",
+  JavaScript: "Handles browser events and updates the page when a visitor interacts.",
+  "HTML / CSS": "Give a page its document structure, layout and responsive styling.",
+  "Tailwind CSS": "Composes responsive layouts from utility classes.",
+  "Next.js": "Adds routing and server rendering to React applications.",
+  "React Native": "Builds native mobile interfaces from React components.",
+  "Expo Go": "Previews compatible React Native projects on a physical device.",
+  "Android SDK": "Provides tools for building and debugging Android apps.",
+  Firebase: "Offers managed services for authentication and cloud data storage.",
+  PyTorch: "Defines neural networks and computes gradients during training.",
+  WavLM: "Encodes speech into learned representations for audio models.",
+  AASIST: "Models audio cues associated with spoofed speech.",
+  "scikit-learn": "Provides tools for fitting models and evaluating predictions.",
+  "Test cases": "Describe the starting conditions, action and expected result of a check.",
+  "Regression testing": "Rechecks existing behavior after a change.",
+  "Bug reporting": "Captures reproduction steps, observed behavior and the expected result.",
+  "Manual testing": "Exercises a feature directly to explore unexpected behavior.",
+  "Backend support": "Investigates service issues and gathers context for follow-up.",
+  "IT service desk": "Helps users work through technical issues and routes support requests.",
+  "Hardware and software troubleshooting": "Isolates a fault by checking devices, settings and application behavior.",
+  "Ticketing systems": "Track an issue, its status and its handoff between support teams.",
+  "Customer communication": "Clarifies the symptom with the user and explains the next step.",
 };
 export default function StickerTray() {
   const [category, setCategory] = useState("Web"),
@@ -267,7 +281,7 @@ export default function StickerTray() {
         <div className="key-info" aria-live="polite">
           {picked ? (
             <>
-              <b>{picked}</b> · {prompts[picked] || context[category]}
+              <b>{picked}</b> · {prompts[picked]}
             </>
           ) : (
             <>

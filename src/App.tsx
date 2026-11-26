@@ -1,4 +1,4 @@
-import { lazy, useEffect, useRef, useState } from "react";
+import { lazy, Suspense, useEffect, useRef, useState } from "react";
 import { ArrowUpRight, Command, Menu, X } from "lucide-react";
 const Workbench = lazy(() => import("./components/Workbench"));
 import Work from "./components/Work";
@@ -366,6 +366,7 @@ function Contact() {
 }
 
 export default function App() {
+  const [computerLoaded, setComputerLoaded] = useState(false);
   const [study, setStudy] = useState(notebookFromUrl);
   function openNotebook(index: number) {
     const url = notebookUrl(index);
@@ -436,11 +437,17 @@ export default function App() {
             }
           >
             <Lab />
-            <details className="computer-drawer">
+            <details className="computer-drawer" onToggle={(event) => {
+              if (event.currentTarget.open) setComputerLoaded(true);
+            }}>
               <summary>
                 Open the miniature computer <span>＋</span>
               </summary>
-              <Workbench />
+              {computerLoaded && (
+                <Suspense fallback={<p role="status">Opening the workbench…</p>}>
+                  <Workbench />
+                </Suspense>
+              )}
             </details>
           </Nearby>
         </section>
